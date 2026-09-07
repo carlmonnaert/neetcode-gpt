@@ -15,4 +15,4 @@ class Solution:
         # Return: (dL_dw rounded to 5 decimals, dL_db rounded to 5 decimals)
         z = np.dot(x,w) + b
         y_hat = 1 / (1 + np.exp(-z))
-        return ([np.round((y_hat - y_true) * y_hat * (1 - y_hat) * x[i],5) for i in range(len(x))] , np.round((y_hat - y_true) * y_hat * (1 - y_hat),5))
+        return ([round((y_hat - y_true) * y_hat * (1 - y_hat) * x[i],5) for i in range(len(x))] , round((y_hat - y_true) * y_hat * (1 - y_hat),5))
