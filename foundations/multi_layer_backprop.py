@@ -17,34 +17,23 @@ class Solution:
         #   'db1':   1D list (gradient w.r.t. b1, rounded to 4 decimals)
         #   'dW2':   2D list (gradient w.r.t. W2, rounded to 4 decimals)
         #   'db2':   1D list (gradient w.r.t. b2, rounded to 4 decimals)
-        x = np.asarray(x, dtype=float)
-        W1 = np.asarray(W1, dtype=float)
-        b1 = np.asarray(b1, dtype=float)
-        W2 = np.asarray(W2, dtype=float)
-        b2 = np.asarray(b2, dtype=float)
-        y_true = np.asarray(y_true, dtype=float)
+        
+        x, W1, b1, W2, b2 = np.asarray(x,float), np.asarray(W1,float), np.asarray(b1,float), np.asarray(W2,float), np.asarray(b2,float) 
 
-        # Forward pass
-        z1 = W1 @ x + b1
-        a1 = np.maximum(0, z1)
-        y_hat = W2 @ a1 + b2
-
-        # MSE loss
-        loss = np.mean((y_hat - y_true) ** 2)
-
-        # Backward pass
-        dz2 = 2 * (y_hat - y_true) / len(y_true)
-
-        dW2 = np.outer(dz2, a1)
+        z1 = x @ W1.T + b1
+        a1 = np.maximum(z1,0)
+        z2 = a1 @ W2.T + b2
+        
+        loss = np.mean((z2 - y_true)**2)
+        
+        dz2 = 2 / len(y_true) * (z2 - y_true)
         db2 = dz2
-
-        da1 = W2.T @ dz2
-
-        relu_mask = z1 > 0
-        dz1 = da1 * relu_mask
-
-        dW1 = np.outer(dz1, x)
+        dW2 = np.outer(dz2,a1)
+        
+        da1 = dz2 @ W2
+        dz1 = da1 * (z1 > 0)
         db1 = dz1
+        dW1 = np.outer(dz1,x)
 
         return {
             "loss": round(float(loss), 4),
